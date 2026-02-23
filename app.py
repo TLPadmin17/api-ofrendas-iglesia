@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 import sqlite3
@@ -10,6 +11,13 @@ SECRET_KEY = "IGLESIA_SECRET_2026"
 ALGORITHM = "HS256"
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
@@ -91,4 +99,5 @@ def obtener_movimientos(since: str = "1970-01-01T00:00:00", token: str = Depends
             "motivo": r[7],
             "creado_en": r[8],
         })
+
     return result
